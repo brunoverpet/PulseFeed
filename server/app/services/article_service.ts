@@ -1,50 +1,28 @@
 import Article from '#models/article'
+import { CreateArticleType } from '#validators/article'
 
 export class ArticleService {
   async index() {
-    try {
-      return await Article.all()
-    } catch (e) {
-      throw new Error('Aucun article publié.')
-    }
+    return await Article.all()
   }
 
   async show(id: number) {
-    try {
-      return await Article.findOrFail(id)
-    } catch (e) {
-      throw new Error("L'article n'existe pas.")
-    }
+    return await Article.findOrFail(id)
   }
 
-  async store(payload: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>) {
-    try {
-      const newArticle = await Article.create(payload)
-      return { success: true, newArticle }
-    } catch (err) {
-      throw new Error('Impossible de créer l’article : ' + err.message)
-    }
+  async store(payload: CreateArticleType) {
+    return await Article.create(payload)
   }
 
   async update(id: number, payload: Partial<Article>) {
-    try {
-      const article = await Article.findOrFail(id)
-      article.merge(payload)
-      await article.save()
-      return { success: true, article }
-    } catch (e) {
-      throw new Error("Une erreur s'est produite lors de la mise à jour : " + e.message)
-    }
+    const article = await Article.findOrFail(id)
+    article.merge(payload)
+    await article.save()
+    return article
   }
 
   async destroy(id: number) {
-    try {
-      const article = await Article.findOrFail(id)
-      await article.delete()
-      return { success: true, id }
-    } catch (e) {
-      throw new Error("Impossible de supprimer l'article : " + e.message)
-    }
+    const article = await Article.findOrFail(id)
+    return await article.delete()
   }
-
 }

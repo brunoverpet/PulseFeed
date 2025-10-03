@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.string('meta_description')
       table.text('content')
       table.string('published_at')
-      table.jsonb('images')
+      table.jsonb('images').nullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

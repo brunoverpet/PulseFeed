@@ -26,7 +26,7 @@ export default class Article extends BaseModel {
   declare publishedAt: string
 
   @column()
-  declare images: ArticleImage[]
+  declare images: ArticleImage[] | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

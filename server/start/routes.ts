@@ -9,8 +9,6 @@
 
 import router from '@adonisjs/core/services/router'
 
-router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})
+const TestsController = () => import('#controllers/tests_controller')
+
+router.get('/test', [TestsController, 'index'])

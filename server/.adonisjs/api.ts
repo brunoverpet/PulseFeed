@@ -7,16 +7,41 @@
 import type { MakeTuyauRequest, MakeTuyauResponse } from '@tuyau/utils/types'
 import type { InferInput } from '@vinejs/vine/types'
 
-type TestGetHead = {
+type ArticlesGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/tests_controller.ts').default['index'], false>
+  response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['index'], false>
+}
+type ArticlesIdGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['show'], false>
+}
+type ArticlesPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/article.ts')['createArticleValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['create'], true>
+}
+type ArticlesIdPut = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/article.ts')['updateArticleValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['update'], true>
+}
+type ArticlesIdDelete = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['destroy'], false>
 }
 export interface ApiDefinition {
-  'test': {
+  'articles': {
     '$url': {
     };
-    '$get': TestGetHead;
-    '$head': TestGetHead;
+    '$get': ArticlesGetHead;
+    '$head': ArticlesGetHead;
+    ':id': {
+      '$url': {
+      };
+      '$get': ArticlesIdGetHead;
+      '$head': ArticlesIdGetHead;
+      '$put': ArticlesIdPut;
+      '$delete': ArticlesIdDelete;
+    };
+    '$post': ArticlesPost;
   };
 }
 const routes = [

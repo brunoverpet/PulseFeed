@@ -55,20 +55,27 @@ body,
 }
 
 .simple-editor-wrapper {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: auto;
   overflow: auto;
 }
 
 .simple-editor-content {
-  max-width: 648px;
+  max-width: 100%;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
+
+.simple-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor {
   flex: 1;

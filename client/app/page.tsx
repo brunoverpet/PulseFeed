@@ -2,7 +2,7 @@
 
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
 import { useEffect, useState } from 'react'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { HorizontalRule } from '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension'
 import { TextAlign } from '@tiptap/extension-text-align'
@@ -65,8 +65,8 @@ export default function PageEdition() {
         />
       </div>
       <div className="flex gap-4 max-w-6xl mx-auto">
-        <div className="w-1/2 border p-4">
-          <h1 className="text-xl font-bold mb-2">Édition</h1>
+        <div className="flex-1 rounded-t-md border-t border-x border-input shadow-xs focus-within:ring-2 focus-within:ring-ring dark:bg-input/30">
+          <h1 className="text-xl font-bold m-6">Édition</h1>
           <SimpleEditor
             onSave={({ json, html }) => {
               setArticle({ json, html })
@@ -74,15 +74,14 @@ export default function PageEdition() {
             }}
           />
         </div>
-
-        <div className="w-1/2 border p-4 bg-gray-50">
-          <h1 className="text-xl font-bold mb-2">Prévisualisation</h1>
-          {article ? (
-            <EditorContent editor={previewEditor} />
-          ) : (
-            <p>Aucun contenu pour le moment...</p>
-          )}
-        </div>
+        {/*<div className="w-1/2 border p-4 bg-gray-50">*/}
+        {/*  <h1 className="text-xl font-bold mb-2">Prévisualisation</h1>*/}
+        {/*  {article ? (*/}
+        {/*    <EditorContent editor={previewEditor} />*/}
+        {/*  ) : (*/}
+        {/*    <p>Aucun contenu pour le moment...</p>*/}
+        {/*  )}*/}
+        {/*</div>*/}
       </div>
     </>
   )

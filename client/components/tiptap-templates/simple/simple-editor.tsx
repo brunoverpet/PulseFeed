@@ -57,13 +57,13 @@ import { useWindowSize } from '@/hooks/use-window-size'
 import { useCursorVisibility } from '@/hooks/use-cursor-visibility'
 
 // --- Components ---
-import { ThemeToggle } from '@/components/tiptap-templates/simple/theme-toggle'
 
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils'
 
 // --- Styles ---
 import '@/components/tiptap-templates/simple/simple-editor.scss'
+import { toast } from 'sonner'
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -81,55 +81,56 @@ const MainToolbarContent = ({
       <Spacer />
 
       <ToolbarGroup>
-        <UndoRedoButton action="undo" />
-        <UndoRedoButton action="redo" />
+        <UndoRedoButton action="undo" tooltip="Annuler" />
+        <UndoRedoButton action="redo" tooltip="Retablir" />
       </ToolbarGroup>
 
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <HeadingDropdownMenu levels={[1, 2, 3, 4]} portal={isMobile} />
-        <ListDropdownMenu types={['bulletList', 'orderedList', 'taskList']} portal={isMobile} />
-        <BlockquoteButton />
-        <CodeBlockButton />
+        <HeadingDropdownMenu tooltip="Titre" levels={[1, 2, 3, 4]} portal={isMobile} />
+        <ListDropdownMenu
+          types={['bulletList', 'orderedList', 'taskList']}
+          portal={isMobile}
+          tooltip="Liste"
+        />
+        <BlockquoteButton tooltip="Citation" />
+        <CodeBlockButton tooltip="Bloc de code" />
       </ToolbarGroup>
 
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <MarkButton type="bold" />
-        <MarkButton type="italic" />
-        <MarkButton type="strike" />
-        <MarkButton type="code" />
-        <MarkButton type="underline" />
+        <MarkButton type="bold" tooltip="Gras" />
+        <MarkButton type="italic" tooltip="Italique" />
+        <MarkButton type="strike" tooltip="Barré" />
+        <MarkButton type="code" tooltip="Code" />
+        <MarkButton type="underline" tooltip="Souligné" />
         {!isMobile ? (
-          <ColorHighlightPopover />
+          <ColorHighlightPopover tooltip="Surligner" />
         ) : (
-          <ColorHighlightPopoverButton onClick={onHighlighterClick} />
+          <ColorHighlightPopoverButton onClick={onHighlighterClick} tooltip="Surligner" />
         )}
-        {!isMobile ? <LinkPopover /> : <LinkButton onClick={onLinkClick} />}
+        {!isMobile ? (
+          <LinkPopover tooltip="Lien" />
+        ) : (
+          <LinkButton onClick={onLinkClick} tooltip="Lien" />
+        )}
       </ToolbarGroup>
 
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <MarkButton type="superscript" />
-        <MarkButton type="subscript" />
+        <TextAlignButton align="left" tooltip="Aligner à gauche" />
+        <TextAlignButton align="center" tooltip="Centrer" />
+        <TextAlignButton align="right" tooltip="Aligner à droite" />
+        <TextAlignButton align="justify" tooltip="Justifier" />
       </ToolbarGroup>
 
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <TextAlignButton align="left" />
-        <TextAlignButton align="center" />
-        <TextAlignButton align="right" />
-        <TextAlignButton align="justify" />
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <ImageUploadButton text="Add" />
+        <ImageUploadButton text="Ajouter" tooltip="Ajouter une image" />
       </ToolbarGroup>
 
       <Spacer />
@@ -137,7 +138,6 @@ const MainToolbarContent = ({
       {isMobile && <ToolbarSeparator />}
 
       <ToolbarGroup>
-        <ThemeToggle />
         <Button onClick={onSaveClick}>Sauvegarder</Button>
       </ToolbarGroup>
     </>
@@ -183,7 +183,7 @@ export function SimpleEditor({ onSave }: { onSave?: (data: { json: any; html: st
         'autocomplete': 'off',
         'autocorrect': 'off',
         'autocapitalize': 'off',
-        'aria-label': 'Main content area, start typing to enter text.',
+        'aria-label': 'Zone de contenu principal, commencez à taper pour saisir du texte.',
         'class': 'simple-editor',
       },
     },
@@ -210,7 +210,7 @@ export function SimpleEditor({ onSave }: { onSave?: (data: { json: any; html: st
         maxSize: MAX_FILE_SIZE,
         limit: 3,
         upload: handleImageUpload,
-        onError: (error) => console.error('Upload failed:', error),
+        onError: (error) => toast(error.message),
       }),
     ],
   })

@@ -25,16 +25,18 @@ export default class ArticlesController {
   }
 
   async create({ request, response }: HttpContext) {
-    try {
-      const payload = await request.validateUsing(createArticleValidator)
-      const article = await this.articleService.store(payload)
-      return response.created({ success: true, article, message: "L'article a bien été créé." })
-    } catch (e) {
-      return response.badRequest({
-        success: false,
-        message: "Une erreur s'est produite lors de la création de l'article.",
-      })
-    }
+    // try {
+    const payload = await request.validateUsing(createArticleValidator)
+    const article = await this.articleService.store(payload)
+    return response.created({ success: true, article, message: "L'article a bien été créé." })
+    // } catch (e) {
+    //   console.log(e)
+    //   return response.badRequest({
+    //     success: false,
+    //     message: "Une erreur s'est produite lors de la création de l'article.",
+    //     error: e,
+    //   })
+    // }
   }
 
   async update({ params, request, response }: HttpContext) {

@@ -13,6 +13,8 @@ import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
 import { Image } from '@tiptap/extension-image'
+import { InputGroupTooltip } from '@/components/shadcn/InputGroupToolTip'
+import { InputGroupTextareaTooltip } from '@/components/shadcn/InputGroupTextareaToolTip'
 
 export default function PageEdition() {
   const [article, setArticle] = useState<{ json: any; html: string } | null>(null)
@@ -45,25 +47,43 @@ export default function PageEdition() {
   }, [article, previewEditor])
 
   return (
-    <div className="flex gap-4 max-w-6xl mx-auto">
-      <div className="w-1/2 border p-4">
-        <h1 className="text-xl font-bold mb-2">Édition</h1>
-        <SimpleEditor
-          onSave={({ json, html }) => {
-            setArticle({ json, html })
-            console.log(json)
-          }}
+    <>
+      <div className="m-8 xl:my-32 xl:mx-40 flex flex-col gap-4">
+        <InputGroupTooltip
+          type="text"
+          placeholder="Titre de l'article"
+          infoToolTip="Choisissez un titre clair et accrocheur pour votre article."
+        />
+        <InputGroupTooltip
+          type="text"
+          placeholder="mon-premier-article"
+          infoToolTip="Texte utilisé dans l’URL de l’article, il doit être clair et lisible."
+        />
+        <InputGroupTextareaTooltip
+          placeholder="Un résumé accrocheur de l’article (150–160 caractères)"
+          infoToolTip="La description qui apparaît dans les résultats de recherche. Elle doit donner envie de cliquer et résumer le contenu de l’article."
         />
       </div>
+      <div className="flex gap-4 max-w-6xl mx-auto">
+        <div className="w-1/2 border p-4">
+          <h1 className="text-xl font-bold mb-2">Édition</h1>
+          <SimpleEditor
+            onSave={({ json, html }) => {
+              setArticle({ json, html })
+              console.log(json)
+            }}
+          />
+        </div>
 
-      <div className="w-1/2 border p-4 bg-gray-50">
-        <h1 className="text-xl font-bold mb-2">Prévisualisation</h1>
-        {article ? (
-          <EditorContent editor={previewEditor} />
-        ) : (
-          <p>Aucun contenu pour le moment...</p>
-        )}
+        <div className="w-1/2 border p-4 bg-gray-50">
+          <h1 className="text-xl font-bold mb-2">Prévisualisation</h1>
+          {article ? (
+            <EditorContent editor={previewEditor} />
+          ) : (
+            <p>Aucun contenu pour le moment...</p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

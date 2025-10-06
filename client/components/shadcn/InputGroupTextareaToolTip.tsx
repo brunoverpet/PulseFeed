@@ -14,14 +14,27 @@ interface InputGroupTextareaTooltipProps {
   placeholder: string
   infoToolTip: string
   maxLength?: number
+  value?: string
+  onChange?: (value: string) => void
 }
 
 export function InputGroupTextareaTooltip({
   infoToolTip,
   placeholder,
   maxLength = 160,
+  value: controlledValue,
+  onChange,
 }: InputGroupTextareaTooltipProps) {
-  const [value, setValue] = useState('')
+  const [internalValue, setInternalValue] = useState('')
+  const value = controlledValue ?? internalValue
+
+  function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (onChange) {
+      onChange(e.target.value)
+    } else {
+      setInternalValue(e.target.value)
+    }
+  }
 
   return (
     <div className="grid w-full max-w-sm gap-4">
@@ -31,7 +44,7 @@ export function InputGroupTextareaTooltip({
           placeholder={placeholder}
           className="min-h-[150px]"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handleChange}
         />
         <InputGroupAddon align="block-end">
           <Tooltip>

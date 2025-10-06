@@ -57,7 +57,6 @@ import { useWindowSize } from '@/hooks/use-window-size'
 import { useCursorVisibility } from '@/hooks/use-cursor-visibility'
 
 // --- Components ---
-
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils'
 
@@ -69,12 +68,10 @@ const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
   isMobile,
-  onSaveClick,
 }: {
   onHighlighterClick: () => void
   onLinkClick: () => void
   isMobile: boolean
-  onSaveClick: () => void
 }) => {
   return (
     <>
@@ -136,10 +133,6 @@ const MainToolbarContent = ({
       <Spacer />
 
       {isMobile && <ToolbarSeparator />}
-
-      <ToolbarGroup>
-        <Button onClick={onSaveClick}>Sauvegarder</Button>
-      </ToolbarGroup>
     </>
   )
 }
@@ -215,17 +208,6 @@ export function SimpleEditor({ onSave }: { onSave?: (data: { json: any; html: st
     ],
   })
 
-  const handleSave = React.useCallback(() => {
-    if (!editor) return
-    const json = editor.getJSON()
-    const html = editor.getHTML()
-    if (onSave) {
-      onSave({ json, html })
-    } else {
-      console.log('Editor content:', { json, html })
-    }
-  }, [editor, onSave])
-
   const rect = useCursorVisibility({
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
@@ -256,7 +238,6 @@ export function SimpleEditor({ onSave }: { onSave?: (data: { json: any; html: st
               onHighlighterClick={() => setMobileView('highlighter')}
               onLinkClick={() => setMobileView('link')}
               isMobile={isMobile}
-              onSaveClick={handleSave}
             />
           ) : (
             <MobileToolbarContent

@@ -22,14 +22,18 @@ export default function Article({ params }: { params: Promise<{ slug: string }> 
   useEffect(() => {
     async function fetchArticle() {
       try {
-        const article = await tuyau.articles({ slug }).$get()
-        setArticle({ data: article.data.article, html: article.data.article.content, json: null })
-      } catch (error) {
-        toast.error(error.message as string)
+        const article = await tuyau.article({ slug }).$get()
+        setArticle({ data: article.data!.article, html: article.data!.article.content, json: null })
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message)
+        } else {
+          toast.error('Une erreur inconnue est survenue')
+        }
       }
     }
 
-    fetchArticle()
+    void fetchArticle()
   }, [slug])
 
   const extensions = [

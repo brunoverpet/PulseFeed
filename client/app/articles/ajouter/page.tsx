@@ -76,11 +76,9 @@ export default function AddArticle() {
         />
       </div>
 
-      <div className="flex gap-4 max-w-6xl mx-auto">
-        <div className="flex-1 rounded-t-md border-t border-x border-input shadow-xs focus-within:ring-2 focus-within:ring-ring dark:bg-input/30">
-          <h1 className="text-xl font-bold m-6">Édition</h1>
-          <SimpleEditor editorRef={editorRef} />
-        </div>
+      <div className="max-w-4xl mx-auto my-10 p-6 rounded-md border border-input shadow-xs focus-within:ring-2 focus-within:ring-ring dark:bg-input/30">
+        <h1 className="text-xl font-bold mb-4">Édition</h1>
+        <SimpleEditor editorRef={editorRef} />
       </div>
     </div>
   )

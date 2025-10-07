@@ -234,7 +234,12 @@ export function SimpleEditor({ editorRef }: { editorRef: React.RefObject<Editor 
               ? {
                   bottom: `calc(100% - ${height - rect.y}px)`,
                 }
-              : {}),
+              : {
+                  position: 'sticky', // ou 'fixed' si tu veux qu'elle reste au top même hors du container
+                  top: 0,
+                  zIndex: 50, // pour être au-dessus du contenu
+                  background: 'var(--background)', // même bg que ton editor pour éviter transparence
+                }),
           }}
         >
           {mobileView === 'main' ? (
@@ -251,7 +256,11 @@ export function SimpleEditor({ editorRef }: { editorRef: React.RefObject<Editor 
           )}
         </Toolbar>
 
-        <EditorContent editor={editor} role="article" className="simple-editor-content" />
+        <EditorContent
+          editor={editor}
+          role="article"
+          className="simple-editor-content prose prose-neutral max-w-none"
+        />
       </EditorContext.Provider>
     </div>
   )

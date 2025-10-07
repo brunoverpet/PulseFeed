@@ -6,9 +6,14 @@ export class ArticleService {
     return await Article.all()
   }
 
-  async show(id: number) {
-    return await Article.findOrFail(id)
+  async show(slug: string) {
+    return await Article.query().where('slug', slug).firstOrFail()
   }
+
+  // TODO : Dépend de la logique du controller
+  // async show(id: number) {
+  //   return await Article.findOrFail(id)
+  // }
 
   async store(payload: CreateArticleType) {
     return await Article.create(payload)

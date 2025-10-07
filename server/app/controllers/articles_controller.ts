@@ -12,9 +12,22 @@ export default class ArticlesController {
     return response.ok({ success: true, articles })
   }
 
+  // TODO : VOIR SI FAUT PAS 2 MÉTHODES (ADMIN + USER)
+  // async show({ params, response }: HttpContext) {
+  //   try {
+  //     const article = await this.articleService.show(params.id)
+  //     return response.ok({ success: true, article })
+  //   } catch (e) {
+  //     return response.notFound({
+  //       success: false,
+  //       message: "L'article n'existe pas.",
+  //     })
+  //   }
+  // }
+
   async show({ params, response }: HttpContext) {
     try {
-      const article = await this.articleService.show(params.id)
+      const article = await this.articleService.show(params.slug)
       return response.ok({ success: true, article })
     } catch (e) {
       return response.notFound({

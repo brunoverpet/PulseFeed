@@ -18,7 +18,6 @@ import { toast } from 'sonner'
 export default function Article({ params }: { params: Promise<{ slug: string }> }) {
   const [article, setArticle] = useState<{ data: any; json: any; html: string } | null>(null)
   const { slug } = React.use(params)
-  const [art, setArt] = useState<any>(null)
 
   useEffect(() => {
     async function fetchArticle() {
@@ -32,8 +31,6 @@ export default function Article({ params }: { params: Promise<{ slug: string }> 
 
     fetchArticle()
   }, [slug])
-
-  console.log(article)
 
   const extensions = [
     StarterKit.configure({ horizontalRule: false }),

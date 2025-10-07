@@ -11,7 +11,7 @@ type ArticlesGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['index'], false>
 }
-type ArticlesIdGetHead = {
+type ArticleIdGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['show'], false>
 }
@@ -33,18 +33,20 @@ export interface ApiDefinition {
     };
     '$get': ArticlesGetHead;
     '$head': ArticlesGetHead;
-    ':slug': {
-      '$url': {
-      };
-      '$get': ArticlesIdGetHead;
-      '$head': ArticlesIdGetHead;
-    };
     '$post': ArticlesPost;
     ':id': {
       '$url': {
       };
       '$put': ArticlesIdPut;
       '$delete': ArticlesIdDelete;
+    };
+  };
+  'article': {
+    ':slug': {
+      '$url': {
+      };
+      '$get': ArticleIdGetHead;
+      '$head': ArticleIdGetHead;
     };
   };
 }

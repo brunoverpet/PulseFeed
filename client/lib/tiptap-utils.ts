@@ -1,6 +1,7 @@
 import type { Node as TiptapNode } from '@tiptap/pm/model'
 import { NodeSelection, Selection, TextSelection } from '@tiptap/pm/state'
 import type { Editor } from '@tiptap/react'
+import { tuyau } from '@/app/utils/tuyau'
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 
@@ -273,7 +274,7 @@ export const handleImageUpload = async (
 ): Promise<string> => {
   // Validate file
   if (!file) {
-    throw new Error('No file provided')
+    throw new Error('Aucun fichier fourni.')
   }
 
   if (file.size > MAX_FILE_SIZE) {
@@ -282,22 +283,19 @@ export const handleImageUpload = async (
     )
   }
 
-  // For demo/testing: Simulate upload progress. In production, replace the following code
-  // with your own upload implementation.
+  // Simulate progress
   for (let progress = 0; progress <= 100; progress += 10) {
-    if (abortSignal?.aborted) {
-      throw new Error('Téléchargement annulé.')
-    }
-
-    if (progress === 50) {
-      throw new Error("Erreur de test lors de l'ajout des images.")
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    if (abortSignal?.aborted) throw new Error('Téléchargement annulé.')
     onProgress?.({ progress })
+    await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
-  return '/images/tiptap-ui-placeholder-image.jpg'
+  const res = await tuyau.uploads.$post({ file })
+  if (!res || !res.data || !res.data.success) {
+    throw new Error("Impossible de télécharger l'image. Veuillez réessayer.")
+  }
+
+  return res.data.url
 }
 
 type ProtocolOptions = {

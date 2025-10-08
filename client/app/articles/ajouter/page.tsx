@@ -6,28 +6,29 @@ import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor
 import * as React from 'react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import ArticleForm from '@/components/forms/ArticleForm'
 import { Button } from '@/components/ui/button'
 import type { Editor } from '@tiptap/react'
+import { useRouter } from 'next/navigation'
+import ArticleForm from '@/components/forms/ArticleForm'
 
 export default function AddArticle() {
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [metaDescription, setMetaDescription] = useState('')
   const editorRef = React.useRef<Editor | null>(null)
+  const router = useRouter()
 
   async function handlePublish() {
     if (!editorRef.current) return toast('Éditeur non initialisé')
 
     const html = editorRef.current.getHTML()
-    const json = editorRef.current.getJSON()
 
     if (!title || !slug || !metaDescription || !html) {
       return toast('Tous les champs sont requis')
     }
 
     try {
-      await ArticleForm({
+      const article = await ArticleForm({
         //@ts-ignore
         title,
         //@ts-ignore
@@ -39,9 +40,35 @@ export default function AddArticle() {
         //@ts-ignore
         images: [],
       })
-      toast('Article créé ✅')
-    } catch (e) {
-      toast.error((e as Error).message)
+      toast.success('Article créé ✅', {
+        closeButton: true,
+        duration: 5000,
+        position: 'top-right',
+        style: {
+          background: '#e6f7f1',
+          color: '#2a8764',
+        },
+        description: (
+          <div>
+            <div>
+              <div>
+                <strong>Status :</strong> Brouillon
+              </div>
+              <div>
+                <strong>Date de publication :</strong> Non publiée
+              </div>
+            </div>
+          </div>
+        ),
+      })
+
+      return router.push(`/articles/${article.article.slug}`)
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        toast.error(e.message)
+      } else {
+        toast.error('Une erreur est survenue')
+      }
     }
   }
 

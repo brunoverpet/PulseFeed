@@ -1,18 +1,18 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import type { Editor } from "@tiptap/react"
+import * as React from 'react'
+import type { Editor } from '@tiptap/react'
 
 // --- Hooks ---
-import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
+import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
 
 // --- Icons ---
-import { ListIcon } from "@/components/tiptap-icons/list-icon"
-import { ListOrderedIcon } from "@/components/tiptap-icons/list-ordered-icon"
-import { ListTodoIcon } from "@/components/tiptap-icons/list-todo-icon"
+import { ListIcon } from '@/components/tiptap-icons/list-icon'
+import { ListOrderedIcon } from '@/components/tiptap-icons/list-ordered-icon'
+import { ListTodoIcon } from '@/components/tiptap-icons/list-todo-icon'
 
 // --- Lib ---
-import { isNodeInSchema } from "@/lib/tiptap-utils"
+import { isNodeInSchema } from '@/lib/tiptap-utils'
 
 // --- Tiptap UI ---
 import {
@@ -20,7 +20,7 @@ import {
   isListActive,
   listIcons,
   type ListType,
-} from "@/components/tiptap-ui/list-button"
+} from '@/components/tiptap-ui/list-button'
 
 /**
  * Configuration for the list dropdown menu functionality
@@ -50,44 +50,34 @@ export interface ListOption {
 
 export const listOptions: ListOption[] = [
   {
-    label: "Bullet List",
-    type: "bulletList",
+    label: 'Bullet List',
+    type: 'bulletList',
     icon: ListIcon,
   },
   {
-    label: "Ordered List",
-    type: "orderedList",
+    label: 'Ordered List',
+    type: 'orderedList',
     icon: ListOrderedIcon,
   },
   {
-    label: "Task List",
-    type: "taskList",
+    label: 'Task List',
+    type: 'taskList',
     icon: ListTodoIcon,
   },
 ]
 
-export function canToggleAnyList(
-  editor: Editor | null,
-  listTypes: ListType[]
-): boolean {
+export function canToggleAnyList(editor: Editor | null, listTypes: ListType[]): boolean {
   if (!editor || !editor.isEditable) return false
   return listTypes.some((type) => canToggleList(editor, type))
 }
 
-export function isAnyListActive(
-  editor: Editor | null,
-  listTypes: ListType[]
-): boolean {
+export function isAnyListActive(editor: Editor | null, listTypes: ListType[]): boolean {
   if (!editor || !editor.isEditable) return false
   return listTypes.some((type) => isListActive(editor, type))
 }
 
-export function getFilteredListOptions(
-  availableTypes: ListType[]
-): typeof listOptions {
-  return listOptions.filter(
-    (option) => !option.type || availableTypes.includes(option.type)
-  )
+export function getFilteredListOptions(availableTypes: ListType[]): typeof listOptions {
+  return listOptions.filter((option) => !option.type || availableTypes.includes(option.type))
 }
 
 export function shouldShowListDropdown(params: {
@@ -103,7 +93,7 @@ export function shouldShowListDropdown(params: {
     return false
   }
 
-  if (hideWhenUnavailable && !editor.isActive("code")) {
+  if (hideWhenUnavailable && !editor.isActive('code')) {
     return canToggleAny
   }
 
@@ -163,7 +153,7 @@ export function getActiveListType(
 export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
   const {
     editor: providedEditor,
-    types = ["bulletList", "orderedList", "taskList"],
+    types = ['bulletList', 'orderedList', 'taskList'],
     hideWhenUnavailable = false,
   } = config || {}
 
@@ -172,10 +162,7 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
 
   const listInSchema = types.some((type) => isNodeInSchema(type, editor))
 
-  const filteredLists = React.useMemo(
-    () => getFilteredListOptions(types),
-    [types]
-  )
+  const filteredLists = React.useMemo(() => getFilteredListOptions(types), [types])
 
   const canToggleAny = canToggleAnyList(editor, types)
   const isAnyActive = isAnyListActive(editor, types)
@@ -199,10 +186,10 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
 
     handleSelectionUpdate()
 
-    editor.on("selectionUpdate", handleSelectionUpdate)
+    editor.on('selectionUpdate', handleSelectionUpdate)
 
     return () => {
-      editor.off("selectionUpdate", handleSelectionUpdate)
+      editor.off('selectionUpdate', handleSelectionUpdate)
     }
   }, [canToggleAny, editor, hideWhenUnavailable, listInSchema, types])
 
@@ -213,7 +200,7 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
     canToggle: canToggleAny,
     types,
     filteredLists,
-    label: "List",
+    label: 'List',
     Icon: activeList ? listIcons[activeList.type] : ListIcon,
   }
 }

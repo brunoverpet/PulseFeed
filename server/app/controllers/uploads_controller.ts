@@ -16,7 +16,6 @@ export default class UploadsController {
     }
     const buffer = await fs.readFile(file.tmpPath)
     const url = await this.flyDrive.uploadFile(file.clientName, buffer)
-    console.log(url)
 
     if (!url) {
       return response.badRequest({

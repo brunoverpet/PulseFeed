@@ -1,9 +1,4 @@
-import {
-  IconBrandJavascript,
-  IconCopy,
-  IconCornerDownLeft,
-  IconRefresh,
-} from "@tabler/icons-react"
+import { IconBrandJavascript, IconCopy, IconCornerDownLeft, IconRefresh } from '@tabler/icons-react'
 
 import {
   InputGroup,
@@ -11,7 +6,7 @@ import {
   InputGroupButton,
   InputGroupText,
   InputGroupTextarea,
-} from "@/components/ui/input-group"
+} from '@/components/ui/input-group'
 
 export default function InputGroupTextareaExample() {
   return (

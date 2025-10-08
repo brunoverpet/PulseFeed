@@ -27,6 +27,10 @@ type ArticlesIdDelete = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/articles_controller.ts').default['destroy'], false>
 }
+type UploadsPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/uploads_controller.ts').default['upload'], false>
+}
 export interface ApiDefinition {
   'articles': {
     '$url': {
@@ -48,6 +52,11 @@ export interface ApiDefinition {
       '$get': ArticleIdGetHead;
       '$head': ArticleIdGetHead;
     };
+  };
+  'uploads': {
+    '$url': {
+    };
+    '$post': UploadsPost;
   };
 }
 const routes = [

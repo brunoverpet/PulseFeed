@@ -1,10 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-export interface ArticleImage {
-  url: string
-  alt: string
-}
+type Status = 'draft' | 'published' | 'archived'
 
 export default class Article extends BaseModel {
   @column({ isPrimary: true })
@@ -26,7 +23,7 @@ export default class Article extends BaseModel {
   declare publishedAt: string
 
   @column()
-  declare images: ArticleImage[] | null
+  declare status: Status
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

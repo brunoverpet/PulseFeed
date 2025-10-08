@@ -16,16 +16,9 @@ export const createArticleValidator = vine.compile(
         const slug = await db.from('articles').where('slug', value).first()
         return !slug
       }),
+    status: vine.enum(['draft', 'published', 'archived']),
     metaDescription: vine.string().minLength(5).maxLength(160).trim(),
     content: vine.string().minLength(20),
-    images: vine
-      .array(
-        vine.object({
-          url: vine.string(),
-          alt: vine.string().trim().minLength(10).maxLength(50),
-        })
-      )
-      .optional(),
   })
 )
 

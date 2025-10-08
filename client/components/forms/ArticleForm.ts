@@ -9,9 +9,9 @@ export default async function ArticleForm({
   slug,
   metaDescription,
   content,
-  images,
+  status,
 }: ArticleFormProps) {
-  const response = await tuyau.articles.$post({ title, slug, metaDescription, content, images })
+  const response = await tuyau.articles.$post({ title, slug, metaDescription, content, status })
 
   if (response.error || response.status >= 400) {
     if (Array.isArray(response.error?.value)) {

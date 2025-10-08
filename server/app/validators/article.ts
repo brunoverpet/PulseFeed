@@ -39,6 +39,7 @@ createArticleValidator.messagesProvider = new SimpleMessagesProvider({
   'slug.minLength': 'Le slug doit contenir au moins 5 caractères.',
   'slug.maxLength': 'Le slug ne peut pas dépasser 255 caractères.',
   'slug.unique': 'Ce slug est déjà utilisé.',
+  'database.unique': 'Ce slug est déjà utilisé.',
 
   'metaDescription.required': 'La méta description est requise.',
   'metaDescription.minLength': 'La méta description doit contenir au moins 5 caractères.',

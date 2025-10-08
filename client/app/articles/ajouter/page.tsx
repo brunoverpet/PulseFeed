@@ -10,6 +10,17 @@ import { Button } from '@/components/ui/button'
 import type { Editor } from '@tiptap/react'
 import { useRouter } from 'next/navigation'
 import ArticleForm from '@/components/forms/ArticleForm'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 export default function AddArticle() {
   const [title, setTitle] = useState('')
@@ -18,7 +29,7 @@ export default function AddArticle() {
   const editorRef = React.useRef<Editor | null>(null)
   const router = useRouter()
 
-  async function handlePublish() {
+  async function handlePublish(status: 'draft' | 'published' = 'draft') {
     if (!editorRef.current) return toast('Éditeur non initialisé')
 
     const html = editorRef.current.getHTML()
@@ -38,7 +49,7 @@ export default function AddArticle() {
         //@ts-ignore
         content: html, // envoie le HTML
         //@ts-ignore
-        images: [],
+        status,
       })
       toast.success('Article créé ✅', {
         closeButton: true,
@@ -52,11 +63,14 @@ export default function AddArticle() {
           <div>
             <div>
               <div>
-                <strong>Status :</strong> Brouillon
+                <strong>Status :</strong>{' '}
+                {status === 'draft' ? 'Brouillon' : status === 'published' ? 'Publié' : 'Archivé'}
               </div>
-              <div>
-                <strong>Date de publication :</strong> Non publiée
-              </div>
+              {article.article.publishedAt && (
+                <div>
+                  <strong>Date de publication :</strong> {article.article.publishedAt}
+                </div>
+              )}
             </div>
           </div>
         ),
@@ -74,11 +88,90 @@ export default function AddArticle() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mx-10">
-        <h1 className="text-3xl font-bold m-8">Ajouter un article</h1>
-        <Button variant="default" aria-label="Submit" onClick={handlePublish}>
-          Sauvegarder
-        </Button>
+      <div className="sticky top-0 z-50 bg-background border-b border-border py-4 px-8 flex justify-between items-center shadow-sm">
+        <h1 className="text-2xl font-semibold">Ajouter un article</h1>
+
+        <div className="flex gap-3">
+          {/* Annuler */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" aria-label="Cancel">
+                Annuler
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Annuler la création ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Les modifications non enregistrées seront perdues. Cette action est irréversible.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Revenir</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => router.push('/articles')}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Confirmer l’annulation
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Brouillon */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" aria-label="Save draft">
+                Enregistrer comme brouillon
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Enregistrer comme brouillon ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  L’article ne sera pas publié et restera privé. Vous pourrez le modifier et le
+                  publier plus tard.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handlePublish('draft')}
+                  className="bg-amber-500 hover:bg-amber-600 text-white"
+                >
+                  Enregistrer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Publication */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="default" aria-label="Publish article">
+                Publier
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Publier cet article ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  L’article sera rendu public et visible immédiatement. Vous pourrez toujours le
+                  modifier ou le retirer plus tard.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handlePublish('published')}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
+                  Publier maintenant
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
       <div className="m-8 xl:my-32 xl:mx-30 flex items-center justify-center flex-col gap-4">
         <InputGroupTooltip

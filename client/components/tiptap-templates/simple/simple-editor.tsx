@@ -236,7 +236,7 @@ export function SimpleEditor({ editorRef }: { editorRef: React.RefObject<Editor 
                 }
               : {
                   position: 'sticky', // ou 'fixed' si tu veux qu'elle reste au top même hors du container
-                  top: 0,
+                  top: 80,
                   zIndex: 50, // pour être au-dessus du contenu
                   background: 'var(--background)', // même bg que ton editor pour éviter transparence
                 }),

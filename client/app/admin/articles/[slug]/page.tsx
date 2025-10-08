@@ -16,10 +16,10 @@ import { Selection } from '@tiptap/extensions'
 import { tuyau } from '@/app/utils/tuyau'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { ArrowLeftIcon } from '@/components/tiptap-icons/arrow-left-icon'
 import ShareButton from '@/components/ShareButton'
 import getWordCountFromHtml from '@/components/CountWordFromHtml'
 import formatPublishedAt from '@/components/FormatDate'
+import { MoveLeft } from 'lucide-react'
 
 type ArticleResponse = {
   article: {
@@ -104,7 +104,7 @@ export default function Article({ params }: { params: Promise<{ slug: string }> 
             aria-label="Retour"
             className="p-2 mt-1"
           >
-            <ArrowLeftIcon className="h-5 w-5" />
+            <MoveLeft className="h-5 w-5" />
           </Button>
 
           <div>

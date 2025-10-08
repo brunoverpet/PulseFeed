@@ -63,14 +63,6 @@ export const updateArticleValidator = vine.compile(
       .optional(),
     metaDescription: vine.string().minLength(5).maxLength(160).trim().optional(),
     content: vine.string().minLength(20).optional(),
-    images: vine
-      .array(
-        vine.object({
-          url: vine.string(),
-          alt: vine.string().trim().minLength(10).maxLength(50),
-        })
-      )
-      .optional(),
   })
 )
 

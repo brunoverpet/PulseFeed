@@ -162,7 +162,13 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor({ editorRef }: { editorRef: React.RefObject<Editor | null> }) {
+export function SimpleEditor({
+  initialContent,
+  editorRef,
+}: {
+  editorRef: React.RefObject<Editor | null>
+  initialContent?: string
+}) {
   const isMobile = useIsMobile()
   const { height } = useWindowSize()
   const [mobileView, setMobileView] = React.useState<'main' | 'highlighter' | 'link'>('main')
@@ -216,6 +222,12 @@ export function SimpleEditor({ editorRef }: { editorRef: React.RefObject<Editor 
   React.useEffect(() => {
     if (editorRef) editorRef.current = editor
   }, [editor, editorRef])
+
+  React.useEffect(() => {
+    if (editor && initialContent) {
+      editor.commands.setContent(initialContent)
+    }
+  }, [editor, initialContent])
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== 'main') {

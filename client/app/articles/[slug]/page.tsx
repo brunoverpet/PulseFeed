@@ -18,6 +18,8 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon } from '@/components/tiptap-icons/arrow-left-icon'
 import ShareButton from '@/components/ShareButton'
+import getWordCountFromHtml from '@/components/CountWordFromHtml'
+import formatPublishedAt from '@/components/FormatDate'
 
 type ArticleResponse = {
   article: {
@@ -27,35 +29,6 @@ type ArticleResponse = {
     metaDescription?: string
     publishedAt?: string | null
     status?: 'draft' | 'published' | 'archived'
-  }
-}
-
-function formatPublishedAt(iso?: string | null) {
-  if (!iso) return 'Non publiée'
-  try {
-    const d = new Date(iso)
-    return d.toLocaleString('fr-FR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return iso
-  }
-}
-
-function getWordCountFromHtml(html?: string) {
-  if (!html) return 0
-  try {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-    const text = doc.body.textContent ?? ''
-    const words = text.trim().split(/\s+/).filter(Boolean)
-    return words.length
-  } catch {
-    return 0
   }
 }
 

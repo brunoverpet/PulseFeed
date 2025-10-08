@@ -57,7 +57,8 @@ body,
 .simple-editor-wrapper {
   width: 100%;
   height: auto;
-  overflow: auto;
+  overflow: visible;
+  position: relative;
 }
 
 .simple-editor-content {

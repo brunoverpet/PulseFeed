@@ -13,10 +13,10 @@ export class FlyDriveService {
     return await disk.exists(key)
   }
 
-  async uploadFile(key: string, content: string) {
+  async uploadFile(key: string, content: string | Buffer) {
     const safeKey = this.normalizeName(key)
     await disk.put(safeKey, content)
-    return this.getPublicUrl(key)
+    return await this.getPublicUrl(safeKey)
   }
 
   async deleteFile(key: string) {

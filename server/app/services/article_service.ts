@@ -16,7 +16,12 @@ export class ArticleService {
   // }
 
   async store(payload: CreateArticleType) {
-    return await Article.create(payload)
+    const dataToSave = {
+      ...payload,
+      published_at: payload.status === 'published' ? new Date().toISOString() : null,
+    }
+
+    return await Article.create(dataToSave)
   }
 
   async update(id: number, payload: Partial<Article>) {

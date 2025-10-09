@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Editor } from '@tiptap/react'
 import { useRouter } from 'next/navigation'
-import ArticleForm from '@/components/forms/ArticleForm'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,19 +21,11 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { tuyau } from '@/app/utils/tuyau'
-import StarterKit from '@tiptap/starter-kit'
-import HorizontalRule from '@tiptap/extension-horizontal-rule'
-import { TextAlign } from '@tiptap/extension-text-align'
-import { TaskItem, TaskList } from '@tiptap/extension-list'
-import { Highlight } from '@tiptap/extension-highlight'
-import { Image } from '@tiptap/extension-image'
-import { Typography } from '@tiptap/extension-typography'
-import { Superscript } from '@tiptap/extension-superscript'
-import { Subscript } from '@tiptap/extension-subscript'
-import { Selection } from '@tiptap/extensions'
+import ArticleFormPatch from '@/components/forms/ArticleFormPatch'
 
 type ArticleResponse = {
   article: {
+    id: string
     title: string
     slug: string
     content: string
@@ -52,7 +43,20 @@ export default function EditArticle({ params }: { params: Promise<{ slug: string
   const [article, setArticle] = useState<ArticleResponse['article'] | null>(null)
   const [loading, setLoading] = useState(true)
   const editorRef = React.useRef<Editor | null>(null)
+  const [editorContent, setEditorContent] = useState('')
   const router = useRouter()
+  const [initialArticle, setInitialArticle] = useState<ArticleResponse['article'] | null>(null)
+
+  useEffect(() => {
+    if (!editorRef.current) return
+
+    const editor = editorRef.current
+    setEditorContent(editor.getHTML())
+
+    editor.on('update', () => {
+      setEditorContent(editor.getHTML())
+    })
+  }, [editorRef])
 
   useEffect(() => {
     let mounted = true
@@ -64,6 +68,7 @@ export default function EditArticle({ params }: { params: Promise<{ slug: string
         if (mounted && data) {
           setArticle(data)
           setTitle(data.title)
+          setInitialArticle(data)
           setSlugInput(data.slug)
           setMetaDescription(data.metaDescription ?? '')
         }
@@ -81,44 +86,44 @@ export default function EditArticle({ params }: { params: Promise<{ slug: string
     }
   }, [slug])
 
-  const extensions = useMemo(
-    () => [
-      StarterKit.configure({ horizontalRule: false }),
-      HorizontalRule,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Image,
-      Typography,
-      Superscript,
-      Subscript,
-      Selection,
-    ],
-    []
-  )
+  const hasChanged = useMemo(() => {
+    if (!initialArticle) return false
+
+    return (
+      title !== initialArticle.title ||
+      slugInput !== initialArticle.slug ||
+      metaDescription !== (initialArticle.metaDescription ?? '') ||
+      editorContent !== initialArticle.content
+    )
+  }, [title, slugInput, metaDescription, editorContent, initialArticle])
 
   async function handleUpdatePublish(status: 'draft' | 'published' = 'draft') {
     if (!editorRef.current) return toast('Éditeur non initialisé')
 
-    const html = editorRef.current.getHTML()
-
-    if (!title || !slugInput || !metaDescription || !html) {
+    if (!title || !slugInput || !metaDescription) {
       return toast('Tous les champs sont requis')
     }
 
+    if (!hasChanged) {
+      return toast('Aucune modification détectée.')
+    }
+
     try {
-      const updatedArticle = await ArticleForm({
-        //@ts-ignore
+      const html = editorRef.current.getHTML()
+
+      if (!initialArticle) {
+        toast.error('Impossible de mettre à jour sans article initial.')
+        return
+      }
+
+      const updatedArticle = await ArticleFormPatch({
+        id: initialArticle?.id || '',
         title,
-        //@ts-ignore
         slug: slugInput,
-        //@ts-ignore
         metaDescription,
-        //@ts-ignore
         content: html,
-        //@ts-ignore
         status,
+        initialArticle,
       })
       toast.success('Article mis à jour ✅', {
         closeButton: true,

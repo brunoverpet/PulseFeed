@@ -13,9 +13,22 @@ import Link from 'next/link'
 import getWordCountFromHtml from '@/components/CountWordFromHtml'
 import { tuyau } from '@/app/utils/tuyau'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 export default function AdminArticles() {
   const [articles, setArticles] = useState<any[]>([])
+  const [openDialogId, setOpenDialogId] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchArticles() {
@@ -24,6 +37,17 @@ export default function AdminArticles() {
     }
     void fetchArticles()
   }, [])
+
+  async function deleteArticle(id: string) {
+    try {
+      await tuyau.articles({ id }).$delete()
+      setArticles((prevArticles) => prevArticles.filter((article) => article.id !== id))
+      toast.success('Article supprimé ✅')
+    } catch (err) {
+      console.error(err)
+      toast.error('Erreur lors de la suppression')
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -70,22 +94,51 @@ export default function AdminArticles() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
                         <DropdownMenuItem asChild>
                           <Link href={`/admin/articles/modifier/${article.slug}`}>
-                            <Pencil />
-                            Modifier
+                            <Pencil /> Modifier
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            // TODO: fonction de suppression (confirmation + appel API)
-                            console.log('Supprimer', article.id)
-                          }}
-                          className="text-destructive focus:text-destructive"
+
+                        {/* Suppression avec confirmation */}
+                        <AlertDialog
+                          open={openDialogId === article.id}
+                          onOpenChange={(open) => setOpenDialogId(open ? article.id : null)}
                         >
-                          <Trash className="text-destructive focus:text-destructive" />
-                          Supprimer
-                        </DropdownMenuItem>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                setOpenDialogId(article.id)
+                              }}
+                            >
+                              <Trash className="text-destructive" /> Supprimer
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Supprimer cet article ?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Cette action est irréversible. L’article et toutes ses images seront
+                                supprimés.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel onClick={() => setOpenDialogId(null)}>
+                                Annuler
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteArticle(article.id)}
+                                className="bg-red-600 hover:bg-red-700 text-white"
+                              >
+                                Confirmer
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

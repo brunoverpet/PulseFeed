@@ -63,6 +63,7 @@ export const updateArticleValidator = vine.compile(
       .optional(),
     metaDescription: vine.string().minLength(5).maxLength(160).trim().optional(),
     content: vine.string().minLength(20).optional(),
+    status: vine.enum(['draft', 'published', 'archived']).optional(),
   })
 )
 

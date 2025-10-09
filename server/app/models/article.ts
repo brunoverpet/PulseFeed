@@ -20,7 +20,7 @@ export default class Article extends BaseModel {
   declare content: string
 
   @column()
-  declare publishedAt: string
+  declare publishedAt: string | null
 
   @column()
   declare status: Status

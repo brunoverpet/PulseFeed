@@ -26,7 +26,18 @@ export class ArticleService {
 
   async update(id: number, payload: Partial<Article>) {
     const article = await Article.findOrFail(id)
-    article.merge(payload)
+
+    const dataToUpdate = {
+      ...payload,
+      publishedAt:
+        payload.status === 'published'
+          ? new Date().toISOString()
+          : payload.status === 'draft'
+            ? null
+            : article.publishedAt,
+    }
+
+    article.merge(dataToUpdate)
     await article.save()
     return article
   }

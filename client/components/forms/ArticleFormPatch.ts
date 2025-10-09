@@ -8,12 +8,13 @@ type ArticleFormProps = {
   slug?: string
   metaDescription?: string
   content?: string
-  status?: string
+  status?: 'draft' | 'published' | 'archived'
   initialArticle?: {
     title: string
     slug: string
     metaDescription?: string
     content: string
+    status?: 'draft' | 'published' | 'archived'
   }
 }
 

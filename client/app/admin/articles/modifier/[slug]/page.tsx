@@ -86,6 +86,8 @@ export default function EditArticle({ params }: { params: Promise<{ slug: string
     }
   }, [slug])
 
+  const status: 'draft' | 'published' | 'archived' = article?.status ?? 'draft'
+
   const hasChanged = useMemo(() => {
     if (!initialArticle) return false
 
@@ -93,9 +95,10 @@ export default function EditArticle({ params }: { params: Promise<{ slug: string
       title !== initialArticle.title ||
       slugInput !== initialArticle.slug ||
       metaDescription !== (initialArticle.metaDescription ?? '') ||
-      editorContent !== initialArticle.content
+      editorContent !== initialArticle.content ||
+      status !== initialArticle?.status
     )
-  }, [title, slugInput, metaDescription, editorContent, initialArticle])
+  }, [title, slugInput, metaDescription, editorContent, initialArticle, status])
 
   async function handleUpdatePublish(status: 'draft' | 'published' = 'draft') {
     if (!editorRef.current) return toast('Éditeur non initialisé')

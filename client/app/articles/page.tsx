@@ -8,7 +8,6 @@ import formatPublishedAt from '@/components/FormatDate'
 export default async function Articles() {
   const articles = await tuyau.articles.$get()
 
-  console.log(articles)
   return (
     <div className="max-w-7xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-8">Articles</h1>
